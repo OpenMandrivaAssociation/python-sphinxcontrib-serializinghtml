@@ -1,42 +1,51 @@
-%define	module	sphinxcontrib-serializinghtml
+%define module sphinxcontrib-serializinghtml
 
 Summary:	Serialized HTML file support for the Sphinx documentation generator
 Name:		python-%{module}
-Version:	1.1.4
+Version:	1.1.5
 Release:	2
-Source0:	https://github.com/sphinx-doc/%{module}/archive/%{version}.tar.gz
+Source0:	https://github.com/sphinx-doc/%{module}/archive/%{module}-%{version}.tar.gz
 License:	ISC
 Group:		Development/Python
 Url:		http://sphinx-doc.org/
 BuildArch:	noarch
-BuildRequires:	pkgconfig(python2)
-BuildRequires:	pkgconfig(python3)
+BuildRequires:	gettext
+BuildRequires:	pkgconfig(python)
 BuildRequires:	python-setuptools
-BuildRequires:	python2-setuptools
+Obsoletes:	python2-%{module} < 1.1.5
 
 %description
 Serialized HTML file support for the Sphinx documentation generator
 
-%package -n python2-%{module}
-Summary:	Serialized HTML file support for the Sphinx documentation generator
-Group:		Development/Python
-
-%description -n python2-%{module}
-Serialized HTML file support for the Sphinx documentation generator
-
 %prep
-%setup -qc
-cp -a %{module}-%{version} py2
+%autosetup -n %{module}-%{version}
+find -name '*.mo' -delete
+
+%build
+for po in $(find -name '*.po'); do
+  msgfmt --output-file=${po%.po}.mo ${po}
+done
+%py3_build
 
 %install
-cd py2
-PYTHONDONTWRITEBYTECODE=1 %__python2 setup.py install --root=%{buildroot}
+%py3_install
+# Move language files to /usr/share
+cd %{buildroot}%{python3_sitelib}
+for lang in $(find sphinxcontrib/serializinghtml/locales -maxdepth 1 -mindepth 1 -type d -not -path '*/\.*' -printf "%f ");
+do
+  test $lang == __pycache__ && continue
+  install -d %{buildroot}%{_datadir}/locale/$lang/LC_MESSAGES
+  mv sphinxcontrib/serializinghtml/locales/$lang/LC_MESSAGES/*.mo %{buildroot}%{_datadir}/locale/$lang/LC_MESSAGES/
+done
+rm -rf sphinxcontrib/serializinghtml/locales
+ln -s %{_datadir}/locale sphinxcontrib/serializinghtml/locales
+cd -
 
-cd ../%{module}-%{version}
-PYTHONDONTWRITEBYTECODE=1 %__python setup.py install --root=%{buildroot}
+%find_lang sphinxcontrib.serializinghtml
 
-%files
-%{py_puresitedir}/sphinxcontrib*
-
-%files -n python2-%{module}
-%{py2_puresitedir}/sphinxcontrib*
+%files -f sphinxcontrib.serializinghtml.lang
+%license LICENSE
+%doc README.rst
+%{python_sitelib}/sphinxcontrib/
+%{python_sitelib}/sphinxcontrib_*-py%{python_version}.egg-info
+%{python_sitelib}/sphinxcontrib_*-py%{python_version}-nspkg.pth
