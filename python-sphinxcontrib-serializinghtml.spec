@@ -3,8 +3,8 @@
 Summary:	Serialized HTML file support for the Sphinx documentation generator
 Name:		python-%{module}
 Version:	1.1.5
-Release:	2
-Source0:	https://github.com/sphinx-doc/%{module}/archive/%{module}-%{version}.tar.gz
+Release:	3
+Source0:	https://files.pythonhosted.org/packages/source/s/%{module}/%{module}-%{version}.tar.gz
 License:	ISC
 Group:		Development/Python
 Url:		http://sphinx-doc.org/
@@ -25,10 +25,10 @@ find -name '*.mo' -delete
 for po in $(find -name '*.po'); do
   msgfmt --output-file=${po%.po}.mo ${po}
 done
-%py3_build
+%py_build
 
 %install
-%py3_install
+%py_install
 # Move language files to /usr/share
 cd %{buildroot}%{python3_sitelib}
 for lang in $(find sphinxcontrib/serializinghtml/locales -maxdepth 1 -mindepth 1 -type d -not -path '*/\.*' -printf "%f ");
