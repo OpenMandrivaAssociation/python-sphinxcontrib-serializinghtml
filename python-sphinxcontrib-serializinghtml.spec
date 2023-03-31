@@ -3,7 +3,7 @@
 Summary:	Serialized HTML file support for the Sphinx documentation generator
 Name:		python-%{module}
 Version:	1.1.5
-Release:	4
+Release:	5
 Source0:	https://files.pythonhosted.org/packages/source/s/%{module}/%{module}-%{version}.tar.gz
 License:	ISC
 Group:		Development/Python
