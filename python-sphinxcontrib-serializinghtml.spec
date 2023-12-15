@@ -1,9 +1,9 @@
-%define module sphinxcontrib-serializinghtml
+%define module sphinxcontrib_serializinghtml
 
 Summary:	Serialized HTML file support for the Sphinx documentation generator
-Name:		python-%{module}
-Version:	1.1.5
-Release:	5
+Name:		python-%(echo %{module}|sed -e 's,_,-,g')
+Version:	1.1.9
+Release:	1
 Source0:	https://files.pythonhosted.org/packages/source/s/%{module}/%{module}-%{version}.tar.gz
 License:	ISC
 Group:		Development/Python
@@ -47,5 +47,4 @@ cd -
 %license LICENSE
 %doc README.rst
 %{python_sitelib}/sphinxcontrib/
-%{python_sitelib}/sphinxcontrib_*-py*.egg-info
-%{python_sitelib}/sphinxcontrib_*-py*-nspkg.pth
+%{python_sitelib}/*.*-info
