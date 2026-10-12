@@ -3,7 +3,7 @@
 Summary:	Serialized HTML file support for the Sphinx documentation generator
 Name:		python-%(echo %{module}|sed -e 's,_,-,g')
 Version:	2.0.0
-Release:	1
+Release:	2
 Source0:	https://files.pythonhosted.org/packages/source/s/%{module}/%{module}-%{version}.tar.gz
 License:	ISC
 Group:		Development/Python
